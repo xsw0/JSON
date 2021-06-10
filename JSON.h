@@ -74,20 +74,17 @@ private:
     class Parser;
 
     using value_type = std::variant<
-            std::nullptr_t,         // null
-            bool,                   // boolean
-            int64_t,                // Number
-            double,                 // Number
-            std::string,            // String
-            std::vector<JSON>,      // Array
-            Object                  // Object sort by read
+        std::nullptr_t,         // null
+        bool,                   // boolean
+//        int64_t,                // Number
+        double,                 // Number
+        std::string,            // String
+        std::vector<JSON>,      // Array
+        Object                  // Object sort by read
     >;
 
     template<class... Fs>
-    struct Overload : Fs ...
-    {
-        using Fs::operator()...;
-    };
+    struct Overload : Fs ... { using Fs::operator()...; };
     template<class... Fs> Overload(Fs...) -> Overload<Fs...>;
 
     value_type value{};
@@ -104,7 +101,7 @@ public:
     public :
         std::string message;
         ParseError(size_t line, size_t column, const std::string& message)
-                : message(std::to_string(line) + ":" + std::to_string(column) + " error: " + message) {}
+            : message(std::to_string(line) + ":" + std::to_string(column) + " error: " + message) {}
         [[nodiscard]] const char* what() const noexcept override
         {
             return message.data();

@@ -16,13 +16,18 @@ using namespace std;
 int main()
 {
     std::ifstream input{ "../input.json" };
+    JSON json;
     try
     {
-        cout << JSON::parse(input).to_string(-1) << endl;
+        json = JSON::parse(input);
     }
     catch (const JSON::ParseError& pe)
     {
         cout << pe.what() << endl;
     }
+    cout << json.to_string(-1) << endl;
+    cout << json.to_string(0) << endl;
+    cout << json.to_string(2) << endl;
+    cout << json.to_string(4) << endl;
     return 0;
 }
