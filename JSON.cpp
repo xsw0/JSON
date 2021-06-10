@@ -345,7 +345,7 @@ JSON JSON::Parser::number()
     if (!f.empty()) str += "." + f;
 
     auto e = exponent();
-    if (!e.empty()) str += "E" + f;
+    if (!e.empty()) str += "E" + e;
 
     return JSON{ std::stod(str) };
 }
