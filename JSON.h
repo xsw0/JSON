@@ -14,7 +14,7 @@
 
 class JSON
 {
-private:
+public:
     class Object
     {
     public:
@@ -71,6 +71,7 @@ private:
         std::map<key_type, iterator> _map;
     };
 
+private:
     class Parser;
 
     using value_type = std::variant<

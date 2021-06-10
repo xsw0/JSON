@@ -350,6 +350,114 @@ JSON JSON::Parser::number()
     return JSON{ std::stod(str) };
 }
 
+static std::string stringToString(const std::string& string)
+{
+    std::string result;
+    result += "\"";
+    for (auto c : string)
+    {
+        switch (c)
+        {
+        case '"':
+            result += "\\\"";
+            break;
+        case '\\':
+            result += "\\\\";
+            break;
+        case '/':
+            result += "\\/";
+            break;
+        case '\b':
+            result += "\\b";
+            break;
+        case '\f':
+            result += "\\f";
+            break;
+        case '\n':
+            result += "\\n";
+            break;
+        case '\r':
+            result += "\\r";
+            break;
+        case '\t':
+            result += "\\t";
+            break;
+        default:
+            result += c;
+            break;
+        }
+    }
+    result += "\"";
+    return result;
+}
+
+static std::string arrayToString(const std::vector<JSON>& array, int indent, int level)
+{
+    const std::string wrap{ indent < 0 ? "" : "\n" };
+    const std::string indentation(indent > 0 ? indent * level : 0, ' ');
+    const std::string indentation_1(indent > 0 ? indent * (level + 1) : 0, ' ');
+
+    if (array.empty()) return "[]";
+
+    std::string result;
+
+    result += "[";
+    result += wrap;
+
+    auto it = array.cbegin();
+
+    while (true)
+    {
+        result += indentation_1;
+        result += it->to_string(indent, level + 1);
+        ++it;
+        if (it == array.cend()) break;
+        result += ",";
+        result += wrap;
+    }
+
+    result += wrap;
+    result += indentation;
+    result += "]";
+    return result;
+}
+
+static std::string objectToString(const JSON::Object& object, int indent, int level)
+{
+    const std::string wrap{ indent < 0 ? "" : "\n" };
+    const std::string indentation(indent > 0 ? indent * level : 0, ' ');
+    const std::string indentation_1(indent > 0 ? indent * (level + 1) : 0, ' ');
+
+    if (object.empty()) return "{}";
+
+    std::string result;
+
+    result += "{";
+    result += wrap;
+
+    auto it = object.cbegin();
+
+    while (true)
+    {
+        result += indentation_1;
+        result += "\"";
+        result += it->first;
+        result += "\"";
+        result += ":";
+        if (indent > 0) result += " ";
+        result += it->second.to_string(indent, level + 1);
+        ++it;
+        if (it == object.cend()) break;
+        result += ",";
+        result += wrap;
+    }
+
+    result += wrap;
+    result += indentation;
+    result += "}";
+    return result;
+}
+
 std::string JSON::to_string(int indent, int level) const
 {
     const std::string wrap{ indent < 0 ? "" : "\n" };
@@ -364,31 +472,7 @@ std::string JSON::to_string(int indent, int level) const
                 return base ? "true" : "false";
             },
             [&](const std::string& base) -> std::string {
-                std::string result;
-                result += "\"";
-                for (auto c : base)
-                {
-                    switch (c)
-                    {
-                    case '\r':
-                        result += "\\r";
-                        break;
-                    case '\n':
-                        result += "\\n";
-                        break;
-                    case '\\':
-                        result += "\\\\";
-                        break;
-                    case '\t':
-                        result += "\\t";
-                        break;
-                    default:
-                        result += c;
-                        break;
-                    }
-                }
-                result += "\"";
-                return result;
+                return stringToString(base);
             },
 //            [&](int64_t base) -> std::string {
 //                return std::to_string(base);
@@ -397,59 +481,10 @@ std::string JSON::to_string(int indent, int level) const
                 return std::to_string(base);
             },
             [&](const std::vector<JSON>& base) -> std::string {
-                if (base.empty()) return "[]";
-
-                std::string result;
-
-                result += "[";
-                result += wrap;
-
-                auto it = base.cbegin();
-
-                while (true)
-                {
-                    result += indentation_1;
-                    result += it->to_string(indent, level + 1);
-                    ++it;
-                    if (it == base.cend()) break;
-                    result += ",";
-                    result += wrap;
-                }
-
-                result += wrap;
-                result += indentation;
-                result += "]";
-                return result;
+                return arrayToString(base, indent, level);
             },
             [&](const Object& base) -> std::string {
-                if (base.empty()) return "{}";
-
-                std::string result;
-
-                result += "{";
-                result += wrap;
-
-                auto it = base.cbegin();
-
-                while (true)
-                {
-                    result += indentation_1;
-                    result += "\"";
-                    result += it->first;
-                    result += "\"";
-                    result += ":";
-                    if (indent > 0) result += " ";
-                    result += it->second.to_string(indent, level + 1);
-                    ++it;
-                    if (it == base.cend()) break;
-                    result += ",";
-                    result += wrap;
-                }
-
-                result += wrap;
-                result += indentation;
-                result += "}";
-                return result;
+                return objectToString(base, indent, level);
             }
         }, value);
 }
