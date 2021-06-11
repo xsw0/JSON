@@ -28,11 +28,11 @@ std::ifstream input{ "../input.json" };
 JSON json;
 try
 {
-json = JSON::parse(input);
+    json = JSON::parse(input);
 }
 catch (const JSON::ParseError& pe)
 {
-cout << pe.what() << endl;
+    cout << pe.what() << endl;
 }
 
 // convert to string and output
