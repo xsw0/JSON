@@ -12,7 +12,7 @@ using std::endl;
 
 using namespace std;
 
-int main()
+void readme()
 {
     // create json from istream.
     std::ifstream input{ "../input.json" };
@@ -62,6 +62,10 @@ int main()
     // Subscript access
     cout << arr[0].to_string() << endl;         // "abc"
     cout << obj["abc"].to_string() << endl;     // 456.000000
+}
 
+int main()
+{
+    readme();
     return 0;
 }
