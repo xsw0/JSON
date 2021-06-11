@@ -71,7 +71,7 @@ public:
         return std::visit(
             Overload{
                 [&](auto) -> size_t {
-                    throw std::bad_cast();
+                    throw std::runtime_error("value is not a string, array or object");
                 },
                 [&](const std::string& base) -> size_t {
                     return base.size();
