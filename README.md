@@ -31,3 +31,11 @@ cout << json.to_string() << endl;
 cout << json.to_string(-1) << endl; // in one line
 cout << json.to_string(4) << endl; // 4 spaces indent
 ```
+
+create json by variable
+
+``` cpp
+JSON null_value{nullptr} // null
+JSON str{"this is a string"} // string
+JSON num{123.456} // number
+```
