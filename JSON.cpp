@@ -5,6 +5,7 @@
 #include "JSON.h"
 
 #include <sstream>
+#include <map>
 
 class JSON::Parser
 {
