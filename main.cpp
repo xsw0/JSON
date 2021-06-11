@@ -49,7 +49,7 @@ void readme()
 
     // Convert to in-build type
     cout << null_value.as<nullptr_t>() << endl; // nullptr
-    cout << num.as<double>() << endl;           //123.456
+    cout << num.as<double>() << endl;           // 123.456
 
     // add element to array
     arr.as<JSON::Array>().emplace_back("abc");
