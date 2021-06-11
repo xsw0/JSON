@@ -45,17 +45,24 @@ int main()
     JSON obj{ JSON::Object{}};                  // object
 
     // check hold type
-    cout << null_value.is<nullptr_t>();         //true
-    cout << null_value.is<bool>();              //false
+    cout << null_value.is<nullptr_t>() << endl;   // true
+    cout << null_value.is<bool>() << endl;        // false
 
     // Convert to in-build type
-    null_value.as<nullptr_t>();                 // nullptr
-    num.as<double>(); //123.456
-    arr.as<JSON::Object>();
+    cout << null_value.as<nullptr_t>() << endl; // nullptr
+    cout << num.as<double>() << endl;           //123.456
+
+    // add element to array
+    arr.as<JSON::Array>().emplace_back("abc");
+    arr.as<JSON::Array>().emplace_back(123.0);
+
+    // add element to object
+    obj["abc"] = JSON{ 456.0 };
+    obj["def"] = JSON{ "this is a string" };
 
     // Subscript access
-    cout << arr[0].to_string() << endl;
-    cout << obj["abc"].to_string() << endl;
+    cout << arr[0].to_string() << endl;         // "abc"
+    cout << obj["abc"].to_string() << endl;     // 456.000000
 
     return 0;
 }
