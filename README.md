@@ -2,25 +2,7 @@
 
 A toy-level C++ json library
 
-# to_string
-
-Create json from istream.
-
-```json
-{
-  "a": [
-    123.456,
-    123.456e3,
-    "str abc"
-  ],
-  "b": {
-    "null value": null,
-    "true value": true,
-    "false value": false,
-    "str": "abcdefg\t\n\\\r"
-  }
-}
-```
+# Example
 
 ```c++
 // create json from istream.
