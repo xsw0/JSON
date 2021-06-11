@@ -52,6 +52,7 @@ null_value.is<bool>() //false
 Convert to in-build type
 
 ```cpp
-null_value.as<nullptr_t> // nullptr
-num.as<double> //123.456
+null_value.as<nullptr_t>() // nullptr
+num.as<double>() //123.456
 ```
+
