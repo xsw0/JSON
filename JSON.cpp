@@ -22,7 +22,7 @@ public:
     JSON value();
 
     std::string string();
-    std::vector<JSON> array();
+    JSON::Array array();
     Object object();
     JSON checkKeyword(std::string_view key);
     char digit();
@@ -215,9 +215,9 @@ std::string JSON::Parser::string()
     throw error("need a '\"' after a string");
 }
 
-std::vector<JSON> JSON::Parser::array()
+JSON::Array JSON::Parser::array()
 {
-    std::vector<JSON> result;
+    JSON::Array result;
 
     if (!match('[')) throw error("need a '[' before a array");
 
@@ -391,7 +391,7 @@ static std::string stringToString(const std::string& string)
     return result;
 }
 
-static std::string arrayToString(const std::vector<JSON>& array, int indent, int level)
+static std::string arrayToString(const JSON::Array& array, int indent, int level)
 {
     const std::string wrap{ indent < 0 ? "" : "\n" };
     const std::string indentation(indent > 0 ? indent * level : 0, ' ');
@@ -480,7 +480,7 @@ std::string JSON::to_string(int indent, int level) const
             [&](double base) -> std::string {
                 return std::to_string(base);
             },
-            [&](const std::vector<JSON>& base) -> std::string {
+            [&](const JSON::Array& base) -> std::string {
                 return arrayToString(base, indent, level);
             },
             [&](const Object& base) -> std::string {

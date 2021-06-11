@@ -11,66 +11,14 @@
 #include <vector>
 #include <variant>
 #include <list>
+#include <unordered_map>
+#include <any>
 
 class JSON
 {
 public:
-    class Object
-    {
-    public:
-        using key_type = std::string;
-        using mapped_type = JSON;
-        using value_type = std::pair<const key_type, mapped_type>;
-
-        using iterator = std::list<value_type>::iterator;
-        using const_iterator = std::list<value_type>::const_iterator;
-        using reverse_iterator = std::list<value_type>::reverse_iterator;
-        using const_reverse_iterator = std::list<value_type>::const_reverse_iterator;
-
-        [[nodiscard]] const_iterator find(const key_type& key) const
-        {
-            auto it = _map.find(key);
-            return it == _map.cend() ? cend() : it->second;
-        }
-
-        [[nodiscard]] iterator find(const key_type& key)
-        {
-            auto it = _map.find(key);
-            return it == _map.cend() ? end() : it->second;
-        }
-
-        iterator insert(const value_type& key_value)
-        {
-            assert(_map.find(key_value.first) == _map.cend());
-            _value.push_back(key_value);
-            _map.insert({ key_value.first, std::prev(_value.end()) });
-            return std::prev(_value.end());
-        }
-
-        iterator erase(const key_type& key)
-        {
-            auto it = _map.find(key);
-            assert(it != _map.cend());
-            auto result = _value.erase(it->second);
-            _map.erase(it);
-            return result;
-        }
-
-        [[nodiscard]] bool empty() const { return _value.empty(); }
-
-        [[nodiscard]] iterator begin() { return _value.begin(); }
-        [[nodiscard]] iterator end() { return _value.end(); }
-        [[nodiscard]] const_iterator cbegin() const { return _value.cbegin(); }
-        [[nodiscard]] const_iterator cend() const { return _value.cend(); }
-        [[nodiscard]] reverse_iterator rbegin() { return _value.rbegin(); }
-        [[nodiscard]] reverse_iterator rend() { return _value.rend(); }
-        [[nodiscard]] const_reverse_iterator crbegin() const { return _value.crbegin(); }
-        [[nodiscard]] const_reverse_iterator crend() const { return _value.crend(); }
-
-    private:
-        std::list<value_type> _value;
-        std::map<key_type, iterator> _map;
-    };
+    using Array = std::vector<JSON>;
+    using Object = std::unordered_map<std::string, JSON>;
 
 private:
     class Parser;
@@ -78,13 +26,11 @@ private:
     using value_type = std::variant<
         std::nullptr_t,         // null
         bool,                   // boolean
-//        int64_t,                // Number
         double,                 // Number
         std::string,            // String
-        std::vector<JSON>,      // Array
-        Object                  // Object sort by read
+        Array,      // Array
+        Object                  // Object
     >;
-
     template<class... Fs>
     struct Overload : Fs ... { using Fs::operator()...; };
     template<class... Fs> Overload(Fs...) -> Overload<Fs...>;
@@ -100,16 +46,16 @@ public:
 
     JSON& operator[](size_t index)
     {
-        return std::get<std::vector<JSON>>(value)[index];
+        return std::get<Array>(value)[index];
     }
 
-//    JSON& operator[](const std::string& key)
-//    {
-//        return std::get<Object>(value)[key];
-//    }
+    JSON& operator[](const std::string& key)
+    {
+        return std::get<Object>(value)[key];
+    }
 
     template<typename T>
-    bool is()
+    [[nodiscard]] bool is() const
     {
         return std::holds_alternative<T>(value);
     }
@@ -118,6 +64,25 @@ public:
     T& as()
     {
         return std::get<T>(value);
+    }
+
+    [[nodiscard]] size_t size() const
+    {
+        return std::visit(
+            Overload{
+                [&](auto) -> size_t {
+                    throw std::bad_cast();
+                },
+                [&](const std::string& base) -> size_t {
+                    return base.size();
+                },
+                [&](const Array& base) -> size_t {
+                    return base.size();
+                },
+                [&](const Object& base) -> size_t {
+                    return base.size();
+                }
+            }, value);
     }
 
     class ParseError : public std::exception

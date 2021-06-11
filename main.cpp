@@ -26,7 +26,8 @@ int main()
         cout << pe.what() << endl;
     }
     cout << json.is<JSON::Object>() << endl;
-    cout << JSON(json.as<JSON::Object>()).to_string(4) << endl;
+    cout << json["b"].to_string(4) << endl;
+    cout << json["a"][0].size() << endl;
 
     return 0;
 }
