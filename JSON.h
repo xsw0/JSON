@@ -39,11 +39,12 @@ public:
             return it == _map.cend() ? end() : it->second;
         }
 
-        void insert(const value_type& key_value)
+        iterator insert(const value_type& key_value)
         {
             assert(_map.find(key_value.first) == _map.cend());
             _value.push_back(key_value);
             _map.insert({ key_value.first, std::prev(_value.end()) });
+            return std::prev(_value.end());
         }
 
         iterator erase(const key_type& key)
@@ -96,6 +97,28 @@ public:
     static JSON parse(std::istream& is);
     static JSON parse(const std::string& str);
     [[nodiscard]] std::string to_string(int indent = -1, int level = 0) const;
+
+    JSON& operator[](size_t index)
+    {
+        return std::get<std::vector<JSON>>(value)[index];
+    }
+
+//    JSON& operator[](const std::string& key)
+//    {
+//        return std::get<Object>(value)[key];
+//    }
+
+    template<typename T>
+    bool is()
+    {
+        return std::holds_alternative<T>(value);
+    }
+
+    template<typename T>
+    T& as()
+    {
+        return std::get<T>(value);
+    }
 
     class ParseError : public std::exception
     {

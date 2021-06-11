@@ -25,12 +25,8 @@ int main()
     {
         cout << pe.what() << endl;
     }
-    cout << json.to_string(-1) << endl;
-    cout << endl;
-    cout << json.to_string(0) << endl;
-    cout << endl;
-    cout << json.to_string(2) << endl;
-    cout << endl;
-    cout << json.to_string(4) << endl;
+    cout << json.is<JSON::Object>() << endl;
+    cout << JSON(json.as<JSON::Object>()).to_string(4) << endl;
+
     return 0;
 }
