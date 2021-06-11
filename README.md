@@ -35,7 +35,23 @@ cout << json.to_string(4) << endl; // 4 spaces indent
 create json by variable
 
 ``` cpp
-JSON null_value{nullptr} // null
-JSON str{"this is a string"} // string
-JSON num{123.456} // number
+JSON null_value{nullptr}                        // null
+JSON str{"this is a string"}                    // string
+JSON num{123.456}                               // number
+JSON arr{ vector<JSON>{}};                      // array
+JSON arr{ unordered_map<string, JSON>{}};       // object
+```
+
+check hold type
+
+```cpp
+null_value.is<nullptr_t>() //true
+null_value.is<bool>() //false
+```
+
+Convert to in-build type
+
+```cpp
+null_value.as<nullptr_t> // nullptr
+num.as<double> //123.456
 ```
