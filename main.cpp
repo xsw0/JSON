@@ -44,8 +44,8 @@ void readme()
     JSON obj{ JSON::Object{}};                  // object
 
     // check hold type
-    cout << null_value.is<nullptr_t>() << endl;   // true
-    cout << null_value.is<bool>() << endl;        // false
+    cout << (null_value.is<nullptr_t>() ? "true" : "false") << endl;    // true
+    cout << (null_value.is<bool>() ? "true" : "false") << endl;         // false
 
     // Convert to in-build type
     cout << null_value.as<nullptr_t>() << endl; // nullptr
