@@ -7,6 +7,7 @@
 
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <variant>
 #include <list>
@@ -35,8 +36,7 @@ private:
 
     value_type value{};
 public:
-    explicit JSON() = default;
-    explicit JSON(value_type value) : value{ std::move(value) } {}
+    explicit JSON(value_type value = nullptr) : value{ std::move(value) } {}
 
     static JSON parse(std::istream& is);
     static JSON parse(const std::string& str);
