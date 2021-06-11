@@ -27,7 +27,7 @@ private:
         bool,                   // boolean
         double,                 // Number
         std::string,            // String
-        Array,      // Array
+        Array,                  // Array
         Object                  // Object
     >;
     template<class... Fs>
