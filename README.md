@@ -2,6 +2,10 @@
 
 A toy-level C++ json library
 
+# Usage
+Just copy JSON.h and JSON.cpp file to your project.
+(Need at least c++17 standard environment).
+
 # Example
 
 ```c++
